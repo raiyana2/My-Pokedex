@@ -1,6 +1,6 @@
-import { use, useEffect, useState }  from "react"
+import { useEffect, useState }  from "react"
 import { getPokedexNumber, getFullPokedexNumber } from "../utils"
-
+import { TypeCard } from "./TypeCard"
 export function PokeCard(props) {
   const { selectedPokemon } = props
   //null because when we dont have any pokemon available, we want it to be null
@@ -9,7 +9,10 @@ export function PokeCard(props) {
   //and then we fetch information and start loading
   const [loading, setLoading] = useState(false)
 
-
+  //destructure the data object
+  //if data is null, then we want to destructure an empty object
+  //as we cant destructure null data type
+  const {name, height, abilities, types, moves, sprites} = data || {}
   //question is what events are we listening for?
   //we are listening for whenever the selectedPokemon event changes
   //so whenever the selectedPokemon changes, we want to re download the data for that pokemon
@@ -60,12 +63,30 @@ export function PokeCard(props) {
 
     fetchPokemonData()
 }, [selectedPokemon]) //whenever selectedPokemon changes, we want to re run this function
+  
+//this makesure we are not rendering undefined values as we donot have any pokemon data
+if (loading || !data) {
   return (
+   <div>
+     <h4>Loading..</h4>
+   </div>
+   )
+}
+
+
+return (
     <div className="poke-card"> 
        <div>
-    <h4>#{getFullPokedexNumber(selectedPokemon)}</h4>    
-       </div>
-
+    <h4>#{getFullPokedexNumber(selectedPokemon)}</h4>  
+    <h2>{name}</h2>  
+  </div>
+    <div className="type-container">
+      {types.map((type, typeIndex) => {
+        return (
+          <TypeCard key={typeIndex} type={type} />
+        )
+      })}
     </div>
+  </div>
   )
 }
