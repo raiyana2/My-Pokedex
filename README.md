@@ -1,1 +1,2 @@
 Explore the world of Pokémon like never before! My Pokédex lets you browse, search, and discover detailed info about your favorite Pokémon. Built with love (and a lot of JavaScript magic). I built this Pokédex in React.js as part of my journey to master front-end development. This website features dynamic Pokémon lookup, API integration, and a fully responsive design.
+
