@@ -13,6 +13,14 @@ export function PokeCard(props) {
   //if data is null, then we want to destructure an empty object
   //as we cant destructure null data type
   const {name, height, abilities, types, moves, sprites} = data || {}
+  
+  const imgList = Object.keys(sprites || {}).filter(val => {
+    if (!sprites[val]) {return false}
+    if (['versions', 'other'].includes(val)) {return false}
+    return true
+  })
+  
+  
   //question is what events are we listening for?
   //we are listening for whenever the selectedPokemon event changes
   //so whenever the selectedPokemon changes, we want to re download the data for that pokemon
@@ -88,6 +96,14 @@ return (
       })}
     </div>
     <img className='default-img' src={'/pokemon/' + getFullPokedexNumber(selectedPokemon) + '.png'} alt={`${name}-large-img`}/>
+    <div className = 'img-container'>
+      {imgList.map((spriteUrl, spriteIndex) => {
+        const imgUrl = sprites[spriteUrl]
+        return (
+           <img key ={spriteIndex} src = {imgUrl} alt={`${name}-img-${spriteUrl}`}/>
+      )
+      })}
+    </div>
   </div>
   )
 }
