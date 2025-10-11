@@ -9,6 +9,8 @@ export function PokeCard(props) {
   //by default false because when we first load the page we are not loading anything
   //and then we fetch information and start loading
   const [loading, setLoading] = useState(false)
+  const [skill, setSkill] = useState(null)
+  const [loadingSkill, setLoadingSkill] = useState(false)
 
   //destructure the data object
   //if data is null, then we want to destructure an empty object
@@ -22,6 +24,43 @@ export function PokeCard(props) {
   })
   
   
+   async function fetchMoveData(move, moveUrl) {
+      if (loadingSkill || !localStorage || !moveUrl) {return}
+    
+    // check cache for move data  
+    let cache2 = {}
+    if (localStorage.getItem('pokemon-moves')) {
+        cache2 = JSON.parse(localStorage.getItem('pokemon-moves'))
+      }
+    if (move in cache2) {
+      setSkill(cache2[move])
+      console.log('Found move in cache')
+      return
+    }
+
+    try {
+          setLoadingSkill(true)
+          const res = fetch(moveUrl)
+          const moveData = res.json()
+          console.log('Fetched move from API', moveData)
+          const description = moveData?.flavor_text_entries.filter(val => { 
+            return val.version_group.name = 'firered-leafgreen'
+          })[0]?.flavor_text 
+          const skillData = {
+            name: move, 
+            description
+          }
+          setSkill(skillData)
+          cache2[move] = skillData
+          localStorage.setItem('pokemon-moves', JSON.stringify(cache2)) 
+    } catch (err) {
+         console.log(err)
+    } finally {
+          setLoadingSkill(false)
+    }
+  }
+
+
   //question is what events are we listening for?
   //we are listening for whenever the selectedPokemon event changes
   //so whenever the selectedPokemon changes, we want to re download the data for that pokemon
@@ -40,6 +79,7 @@ export function PokeCard(props) {
     if (selectedPokemon in cache) {
       //read from cache
       setData(cache[selectedPokemon])
+      console.log('Found pokemon in cache')
       return
     } 
 
@@ -56,7 +96,7 @@ export function PokeCard(props) {
         const pokemonData = await res.json()
         //does samething as fetching from cache
         setData(pokemonData)
-        console.log(pokemonData)
+        console.log('fetched pokemon data')
         cache[selectedPokemon] = pokemonData
         localStorage.setItem('pokedex', JSON.stringify(cache))
 
@@ -82,20 +122,24 @@ if (loading || !data) {
    )
 }
 
-
+//conditional rendering for when we have a skill selected.
+//if skill is null we dont display the code on the other side of the &&
 return (
     <div className="poke-card"> 
-      <Modal handleCloseModal={() => {}}>
+    
+      {skill && (
+        <Modal handleCloseModal={() => {setSkill(null)}}>
           <div>
             <h6>{name}</h6>
             <h2></h2>
           </div>
           <div>
             <h6>Description</h6>
-            <p>asda</p>
+            <p>{skill.description}</p>
           </div>
       </Modal>
-       <div>
+    )}
+  <div>
     <h4>#{getFullPokedexNumber(selectedPokemon)}</h4>  
     <h2>{name}</h2>  
   </div>
@@ -112,7 +156,7 @@ return (
         const imgUrl = sprites[spriteUrl]
         return (
            <img key ={spriteIndex} src = {imgUrl} alt={`${name}-img-${spriteUrl}`}/>
-      )
+       )
       })}
     </div>
     <h3>Stats</h3>
@@ -138,6 +182,6 @@ return (
          )
       })}
     </div>
-  </div>
+  </div> 
   )
 }
