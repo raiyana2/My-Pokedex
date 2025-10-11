@@ -40,8 +40,8 @@ export function PokeCard(props) {
 
     try {
           setLoadingSkill(true)
-          const res = fetch(moveUrl)
-          const moveData = res.json()
+          const res = await fetch(moveUrl)
+          const moveData = await res.json()
           console.log('Fetched move from API', moveData)
           const description = moveData?.flavor_text_entries.filter(val => { 
             return val.version_group.name = 'firered-leafgreen'
@@ -131,7 +131,7 @@ return (
         <Modal handleCloseModal={() => {setSkill(null)}}>
           <div>
             <h6>{name}</h6>
-            <h2></h2>
+            <h2 className='skill-name'>{skill.name.replaceAll('-', ' ')}</h2>
           </div>
           <div>
             <h6>Description</h6>
@@ -176,7 +176,10 @@ return (
     <div className ='pokemon-move-grid'>
       {moves.map((moveObj, moveIndex) => {
          return (
-          <button className ='button-card pokemon-move' key={moveIndex} onClick={() => {}}>
+          <button className ='button-card pokemon-move' key={moveIndex} onClick={() => {
+            fetchMoveData(moveObj?.move?.name, 
+              moveObj?.move?.url)  
+          }}>
               <p>{moveObj?.move?.name.replaceAll('-', ' ')}</p>
           </button>
          )
