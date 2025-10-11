@@ -1,6 +1,7 @@
 import { useEffect, useState }  from "react"
 import { getPokedexNumber, getFullPokedexNumber } from "../utils"
 import { TypeCard } from "./TypeCard"
+import { Modal } from "./Modal"
 export function PokeCard(props) {
   const { selectedPokemon } = props
   //null because when we dont have any pokemon available, we want it to be null
@@ -84,6 +85,16 @@ if (loading || !data) {
 
 return (
     <div className="poke-card"> 
+      <Modal handleCloseModal={() => {}}>
+          <div>
+            <h6>{name}</h6>
+            <h2></h2>
+          </div>
+          <div>
+            <h6>Description</h6>
+            <p>asda</p>
+          </div>
+      </Modal>
        <div>
     <h4>#{getFullPokedexNumber(selectedPokemon)}</h4>  
     <h2>{name}</h2>  
