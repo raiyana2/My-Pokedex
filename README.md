@@ -15,5 +15,5 @@ Explore the world of Pokémon like never before! My Pokédex lets you browse, se
 
 ## Usage 
 
-You can get started immediately at [raiyana-pokedex.netlify.app](https://raiyana-pokedex.netlify.app/). 
+You can get started immediately at [raiyana-pokedex.vercel.app](https://raiyana-pokedex.vercel.app/). 
 
