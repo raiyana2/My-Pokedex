@@ -81,9 +81,9 @@ return (
     <h2>{name}</h2>  
   </div>
     <div className="type-container">
-      {types.map((type, typeIndex) => {
+      {types.map((typeObj, typeIndex) => {
         return (
-          <TypeCard key={typeIndex} type={type} />
+          <TypeCard key={typeIndex} type={typeObj?.type?.name} />
         )
       })}
     </div>
